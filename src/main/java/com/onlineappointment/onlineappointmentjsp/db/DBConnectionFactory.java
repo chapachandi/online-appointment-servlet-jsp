@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 public class DBConnectionFactory {
     // Database connection details
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/your_database";
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/online_appointment";
     private static final String DB_USER = "root";
     private static final String DB_PASSWORD = "chapa";
 
