@@ -71,7 +71,7 @@
 <body>
 <div class="login-container">
     <h2>Login</h2>
-    <form action="" method="POST">
+    <form action="/login" method="post">
         <input type="text" id="username" name="username" placeholder="Username" required>
         <input type="password" id="password" name="password" placeholder="Password" required>
         <select id="userType" name="userType"  placeholder="Select User Type" required>

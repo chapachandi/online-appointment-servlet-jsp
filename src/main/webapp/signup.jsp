@@ -77,7 +77,7 @@
 <body>
 <div class="container">
     <h1>Sign Up</h1>
-    <form action="RegistrationServlet" method="post">
+    <form action="/register" method="post">
         <div class="form-group">
             <label for="name">Name:</label>
             <input type="text" id="name" name="name" required>
