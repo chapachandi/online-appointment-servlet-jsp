@@ -36,7 +36,7 @@
         }
         .login-container input[type="text"],
         .login-container input[type="password"] {
-            width: 78%;
+            width: 86%;
             padding: 10px;
             margin: 8px;
             border: 1px solid #ccc;
@@ -83,7 +83,7 @@
         <button type="submit">Login</button>
         <br/>
         <hr/>
-        <button class="btn-signup"><a class="login-link" href="signup.html">Sign Up</a></button>
+        <button class="btn-signup"><a class="login-link" href="signup.jsp">Sign Up</a></button>
     </form>
 </div>
 </body>
