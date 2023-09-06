@@ -1,72 +1,141 @@
 package com.onlineappointment.onlineappointmentjsp.dao.daoImpl;
 
 import com.onlineappointment.onlineappointmentjsp.dao.RegistrationDAO;
+import com.onlineappointment.onlineappointmentjsp.db.DBConnectionFactory;
 import com.onlineappointment.onlineappointmentjsp.entity.Registration;
 
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.TypedQuery;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class RegistrationDAOImpl implements RegistrationDAO {
-    private final EntityManager entityManager;
-
-    public RegistrationDAOImpl(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
 
     @Override
-    public void save(Registration registration) {
-        entityManager.getTransaction().begin();
-        entityManager.persist(registration);
-        entityManager.getTransaction().commit();
-    }
+    public void addRegistration(Registration registration) {
+        try (Connection connection = DBConnectionFactory.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     "INSERT INTO registrations (name, email, number, user_type, username, password) " +
+                             "VALUES (?, ?, ?, ?, ?, ?)")) {
 
-    @Override
-    public void update(Registration registration) {
-        entityManager.getTransaction().begin();
-        entityManager.merge(registration);
-        entityManager.getTransaction().commit();
-    }
+            preparedStatement.setString(1, registration.getName());
+            preparedStatement.setString(2, registration.getEmail());
+            preparedStatement.setString(3, registration.getNumber());
+            preparedStatement.setString(4, registration.getUserType());
+            preparedStatement.setString(5, registration.getUsername());
+            preparedStatement.setString(6, registration.getPassword());
 
-    @Override
-    public void deleteById(Long id) {
-        entityManager.getTransaction().begin();
-        Registration registration = entityManager.find(Registration.class, id);
-        if (registration != null) {
-            entityManager.remove(registration);
-        }
-        entityManager.getTransaction().commit();
-    }
-
-    @Override
-    public Optional<Registration> findById(Long id) {
-        Registration registration = entityManager.find(Registration.class, id);
-        return Optional.ofNullable(registration);
-    }
-
-    @Override
-    public Optional<Registration> findByUsername(String username) {
-        try {
-            TypedQuery<Registration> query = entityManager.createQuery(
-                    "SELECT r FROM Registration r WHERE r.username = :username",
-                    Registration.class
-            );
-            query.setParameter("username", username);
-            return Optional.of(query.getSingleResult());
-        } catch (NoResultException e) {
-            return Optional.empty();
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
     @Override
-    public List<Registration> findAll() {
-        TypedQuery<Registration> query = entityManager.createQuery(
-                "SELECT r FROM Registration r",
-                Registration.class
-        );
-        return query.getResultList();
+    public Registration getRegistrationById(int id) {
+        try (Connection connection = DBConnectionFactory.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     "SELECT * FROM registrations WHERE id = ?")) {
+
+            preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                return mapResultSetToRegistration(resultSet);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    @Override
+    public Registration getRegistrationByUsername(String username) {
+        try (Connection connection = DBConnectionFactory.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     "SELECT * FROM registrations WHERE username = ?")) {
+
+            preparedStatement.setString(1, username);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                return mapResultSetToRegistration(resultSet);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    @Override
+    public List<Registration> getAllRegistrations() {
+        List<Registration> registrations = new ArrayList<>();
+
+        try (Connection connection = DBConnectionFactory.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     "SELECT * FROM registrations")) {
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                registrations.add(mapResultSetToRegistration(resultSet));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return registrations;
+    }
+
+    @Override
+    public void updateRegistration(Registration registration) {
+        try (Connection connection = DBConnectionFactory.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     "UPDATE registrations SET name = ?, email = ?, number = ?, user_type = ?, username = ?, password = ? " +
+                             "WHERE id = ?")) {
+
+            preparedStatement.setString(1, registration.getName());
+            preparedStatement.setString(2, registration.getEmail());
+            preparedStatement.setString(3, registration.getNumber());
+            preparedStatement.setString(4, registration.getUserType());
+            preparedStatement.setString(5, registration.getUsername());
+            preparedStatement.setString(6, registration.getPassword());
+            preparedStatement.setInt(7, Math.toIntExact(registration.getId()));
+
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void deleteRegistration(int id) {
+        try (Connection connection = DBConnectionFactory.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     "DELETE FROM registrations WHERE id = ?")) {
+
+            preparedStatement.setInt(1, id);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Helper method to map ResultSet to Registration object
+    private Registration mapResultSetToRegistration(ResultSet resultSet) throws SQLException {
+        Registration registration = new Registration();
+        registration.setId(Long.valueOf(resultSet.getInt("id")));
+        registration.setName(resultSet.getString("name"));
+        registration.setEmail(resultSet.getString("email"));
+        registration.setNumber(resultSet.getString("number"));
+        registration.setUserType(resultSet.getString("user_type"));
+        registration.setUsername(resultSet.getString("username"));
+        registration.setPassword(resultSet.getString("password"));
+        return registration;
     }
 }
-

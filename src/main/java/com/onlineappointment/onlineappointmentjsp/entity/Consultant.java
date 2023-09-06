@@ -83,8 +83,8 @@ public class Consultant {
         return number;
     }
 
-    public void setNumber(String phoneNumber) {
-        this.number = phoneNumber;
+    public void setNumber(String number) {
+        this.number = number;
     }
 
     public String getUserType() {

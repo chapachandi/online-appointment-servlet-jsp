@@ -5,5 +5,5 @@ import com.onlineappointment.onlineappointmentjsp.entity.Login;
 import java.util.Optional;
 
 public interface LoginDAO {
-    Optional<Login> findByUsernameAndPasswordAndUserType(String username, String password, String userType);
+    boolean authenticate(String username, String password, String userType);
 }

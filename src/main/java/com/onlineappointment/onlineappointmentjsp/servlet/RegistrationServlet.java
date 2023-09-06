@@ -22,33 +22,34 @@ public class RegistrationServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-
-         EntityManagerFactory emf = Persistence.createEntityManagerFactory("MyPersistence");
-         EntityManager em = emf.createEntityManager();
-         registrationDAO = new RegistrationDAOImpl(em);
+        super.init();
+        // Initialize the RegistrationDAO using the DAO implementation
+        registrationDAO = new RegistrationDAOImpl();
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String username = request.getParameter("username");
+        // Retrieve form data
+        String name = request.getParameter("name");
         String email = request.getParameter("email");
-        String phoneNumber = request.getParameter("phoneNumber");
+        String number = request.getParameter("number");
         String userType = request.getParameter("userType");
+        String username = request.getParameter("username");
         String password = request.getParameter("password");
 
-        // Create a RegistrationEntity object with the user's information
+        // Create a Registration object with the form data
         Registration registration = new Registration();
-        registration.setUsername(username);
+        registration.setName(name);
         registration.setEmail(email);
-        registration.setPhoneNumber(phoneNumber);
+        registration.setNumber(number);
         registration.setUserType(userType);
+        registration.setUsername(username);
         registration.setPassword(password);
 
-        // Save the user registration record to the database
-        registrationDAO.save(registration);
+        // Add the registration to the database
+        registrationDAO.addRegistration(registration);
 
-        // Redirect to a success page or perform other actions
+        // Redirect to a success page or login page
         response.sendRedirect("/login.jsp");
     }
 }
-

@@ -1,11 +1,10 @@
-package com.onlineappointment.onlineappointmentjsp.dao;
+package com.onlineappointment.onlineappointmentjsp.service;
 
 import com.onlineappointment.onlineappointmentjsp.entity.Registration;
 
 import java.util.List;
-import java.util.Optional;
 
-public interface RegistrationDAO {
+public interface RegistrationService {
     void addRegistration(Registration registration);
 
     Registration getRegistrationById(int id);

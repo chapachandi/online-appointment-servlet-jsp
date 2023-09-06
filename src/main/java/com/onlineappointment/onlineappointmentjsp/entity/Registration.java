@@ -21,8 +21,8 @@ public class Registration {
     @Column(name = "user_email") // Specify the column name in the table
     private String email;
 
-    @Column(name = "phone_number") // Specify the column name in the table
-    private String phoneNumber;
+    @Column(name = "number") // Specify the column name in the table
+    private String number;
 
     @Column(name = "user_type") // Specify the column name in the table
     private String userType;
@@ -39,10 +39,10 @@ public class Registration {
         // Default constructor
     }
 
-    public Registration(String name, String email, String phoneNumber, String userType, String username, String password) {
+    public Registration(String name, String email, String number, String userType, String username, String password) {
         this.name = name;
         this.email = email;
-        this.phoneNumber = phoneNumber;
+        this.number = number;
         this.userType = userType;
         this.username = username;
         this.password = password;
@@ -74,12 +74,12 @@ public class Registration {
         this.email = email;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public String getNumber() {
+        return number;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setNumber(String number) {
+        this.number = number;
     }
 
     public String getUserType() {
