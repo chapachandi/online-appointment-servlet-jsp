@@ -11,14 +11,23 @@ public class DBConnectionFactory {
     private static final String DB_PASSWORD = "chapa";
 
     // Create a database connection
-    public static Connection getConnection() {
-        Connection connection = null;
+    public static Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+    }
+
+    public static void close(Connection connection, AutoCloseable... closeables) {
         try {
-            connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-        } catch (SQLException e) {
+            if (connection != null) {
+                connection.close();
+            }
+            for (AutoCloseable closeable : closeables) {
+                if (closeable != null) {
+                    closeable.close();
+                }
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return connection;
     }
 }
 
