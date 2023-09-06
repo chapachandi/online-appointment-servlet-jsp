@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.List;
 
 @WebServlet("/jobs")
-public class JobsServlet extends HttpServlet {
+public class JobServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     private final JobService jobService = new JobServiceImpl();
